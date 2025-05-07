@@ -1,0 +1,26 @@
+body{
+    margin: 0;
+    padding: 0;
+    border-style: border-box;
+    overflow: hidden;
+}
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.columnDiv {
+    border-style: solid;
+    border-width: 1px;
+    flex-grow: 1;
+}
+
+.rowDiv {
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-width: 1px;
+    flex-grow: 1;
+}
