@@ -1,6 +1,6 @@
-const MAX_HEIGHT = 16;
-const MAX_WIDTH = 16;
-const divContainer = document.querySelector(".container");
+const MAX_HEIGHT = 32;
+const MAX_WIDTH = 32;
+const divContainer = document.querySelector(".grid-container");
 
 createGrid(MAX_HEIGHT, MAX_WIDTH);
 
