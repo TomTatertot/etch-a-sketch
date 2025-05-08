@@ -1,7 +1,7 @@
 const INIT_GRID_SIZE = 32;
 const clearButton = document.querySelector("#clear-board")
 const gridSlider = document.querySelector("#grid-slider");
-const toggleBorderButton = document.querySelector("#toggle-border");
+const toggleBorderButton = document.querySelector("#toggle-borders");
 const shadingButton = document.querySelector("#shading-mode");
 const rainbowButton = document.querySelector("#rainbow-mode");
 const eraserButton = document.querySelector("#eraser");
@@ -11,18 +11,15 @@ let shadingMode = false;
 let rainbowMode = false;
 let eraserMode = false;
 let lightenMode = false;
-let toggleBorders = true; 
+let bordersVisible = true; 
 
 createGrid(INIT_GRID_SIZE);
 addBoxClickListeners();
-
 clearButton.addEventListener("click", () => {
     resetBoard();
 })
-
 gridSlider.addEventListener("input", handleSlider);
-
-
+toggleBorderButton.addEventListener("click", toggleBorders);
 
 function createGrid(gridSize){
     const divContainer = document.querySelector(".grid-container");
@@ -101,3 +98,21 @@ function resetBoard(){
         })
     })
 }
+
+function toggleBorders(){
+    const columnBoxes = document.querySelectorAll(".columnDiv");
+
+    if (bordersVisible){
+        columnBoxes.forEach((box) => {
+            box.style.borderWidth = "0";
+        })
+        bordersVisible = false;
+    }
+    else {
+        columnBoxes.forEach((box) => {
+            box.style.borderWidth = "1px";
+        })
+        bordersVisible = true;
+    }
+}
+

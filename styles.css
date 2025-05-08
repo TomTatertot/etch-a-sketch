@@ -44,7 +44,7 @@ body{
 
 .columnDiv {
     border-style: solid;
-    border-width: 1px 0px;
+    border-width: 1px;
     border-color: rgb(150, 150, 150);
     flex-grow: 1;
 }
@@ -54,7 +54,7 @@ body{
     flex-direction: column;
     border-style: solid;
     border-color: rgb(150, 150, 150);
-    border-width: 0px 1px;
+    border-width: 0px;
     flex-grow: 1;
 }
 
