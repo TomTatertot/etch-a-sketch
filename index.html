@@ -7,12 +7,25 @@
     <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-    
+    <header class ="header">
+        <h1 class = "title">Etch A Sketch</h1>
+    </header>
     <div class = "main-container">
-        <div class = "grid-container"></div>  
         <div class = "side-bar">
             <div class = "color-text">Change color</div>
+            <button class ="btn" id = "toggle-borders">Toggle borders</button>
+            <button class ="btn" id = "shading-mode">Shading mode</button>
+            <button class ="btn" id = "rainbow-mode">Rainbow mode</button>
+            <button class ="btn" id = "eraser">Eraser</button>
+            <button class ="btn" id = "lighten">Lighten</button>
+            <div class = "grid-inputs">
+                <div class ="grid-size-text">Grid Size: 16 x 16</div>
+                <input type="range" id="grid-slider" min="10" max="100" value="16">
+                <!-- <button class = "btn" id = "submit">Submit</button> -->
+            </div>
+            <button class ="btn" id = "clear-board">Clear board</button>
         </div>  
+        <div class = "grid-container"></div>  
     </div>
    
 
