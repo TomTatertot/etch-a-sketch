@@ -8,7 +8,7 @@ const shadingButton = document.querySelector("#shading-mode");
 const rainbowButton = document.querySelector("#rainbow-mode");
 const eraserButton = document.querySelector("#eraser");
 const lightenButton = document.querySelector("#lighten");
-// const buttons = document.querySelectorAll(".btn");
+
 let isMouseDown = false;
 let shadingMode = false;
 let rainbowMode = false;
@@ -19,14 +19,13 @@ let currentColorHex = colorPicker.value;
 
 createGrid(INIT_GRID_SIZE);
 addBoxClickListeners();
-clearButton.addEventListener("click", () => {
-    resetBoard();
-})
 
 colorPicker.addEventListener("input", updateFirst);
 colorPicker.addEventListener("change", watchColorPicker);
-gridSlider.addEventListener("input", handleSlider);
 toggleBorderButton.addEventListener("click", toggleBorders);
+brushButton.addEventListener("click", () => {
+    setAllModesOff();
+})
 shadingButton.addEventListener("click", () => {
     setAllModesOff();
     shadingMode = true;
@@ -42,6 +41,10 @@ eraserButton.addEventListener("click", () => {
 lightenButton.addEventListener("click", () => {
     setAllModesOff();
     lightenMode = true;
+})
+gridSlider.addEventListener("input", handleSlider);
+clearButton.addEventListener("click", () => {
+    resetBoard();
 })
 
 function createGrid(gridSize){
