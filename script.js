@@ -3,6 +3,7 @@ const colorPicker = document.querySelector("#color-picker");
 const clearButton = document.querySelector("#clear-board");
 const gridSlider = document.querySelector("#grid-slider");
 const toggleBorderButton = document.querySelector("#toggle-borders");
+const brushButton = document.querySelector("#brush-mode");
 const shadingButton = document.querySelector("#shading-mode");
 const rainbowButton = document.querySelector("#rainbow-mode");
 const eraserButton = document.querySelector("#eraser");
@@ -26,10 +27,21 @@ colorPicker.addEventListener("input", updateFirst);
 colorPicker.addEventListener("change", watchColorPicker);
 gridSlider.addEventListener("input", handleSlider);
 toggleBorderButton.addEventListener("click", toggleBorders);
-shadingButton.addEventListener("click", () => {shadingMode = true;})
+shadingButton.addEventListener("click", () => {
+    setAllModesOff();
+    shadingMode = true;
+})
 rainbowButton.addEventListener("click", () => {
+    setAllModesOff();
     rainbowMode = true;
-    shadingMode = false;
+})
+eraserButton.addEventListener("click", () => {
+    setAllModesOff();
+    eraserMode = true;
+})
+lightenButton.addEventListener("click", () => {
+    setAllModesOff();
+    lightenMode = true;
 })
 
 function createGrid(gridSize){
@@ -69,27 +81,43 @@ function handleBoxHover(event){
     const box = event.target;
     if(isMouseDown)
     {
+        console.log(getComputedStyle(box).backgroundColor);
         if (shadingMode){
             let colorString = getComputedStyle(box).backgroundColor;
             let opacity = getOpacity(colorString);    
+
             if (opacity == 1 && colorString == "rgb(255, 255, 255)"){
-                console.log(colorString)
                 box.style.backgroundColor = currentColorHex;
-                addOpacity(box);
+                addOpacity(box, 0.1);
+            }
+            else if (opacity == 0){
+                box.style.backgroundColor = currentColorHex;
+                addOpacity(box, 0.1);
             }
             else{
                 incrementOpacity(box);
             }        
         }
+        else if (lightenMode){
+            let colorString = getComputedStyle(box).backgroundColor;
+            let opacity = getOpacity(colorString);
+
+            console.log(opacity);
+            if (opacity > 0){
+                decrementOpacity(box);
+            } 
+        }
         else if (rainbowMode){
             box.style.backgroundColor = getRandomColorRGBA();
+        }
+        else if (eraserMode){
+            box.style.backgroundColor = "white";
         }
         else
         {
             box.style.backgroundColor = currentColorHex;   
         }
     }
-    
 }
 
 function handleMouseUp(event){
@@ -171,9 +199,22 @@ function incrementOpacity(box){
     }
 }
 
-function addOpacity(box){
+function decrementOpacity(box){
     let colorStr = getComputedStyle(box).backgroundColor; 
-    box.style.backgroundColor = colorStr.replace(")", `, 0.1)`);
+    let opacity = getOpacity(colorStr);
+    if (opacity == 1){
+        addOpacity(box, 0.9);
+    }
+    if (opacity > 0){
+        let strArray = colorStr.split(",");
+        strArray[3] = ` ${opacity - 0.1})`;
+        box.style.backgroundColor = strArray.toString();
+    }
+}
+
+function addOpacity(box, opacity){
+    let colorStr = getComputedStyle(box).backgroundColor; 
+    box.style.backgroundColor = colorStr.replace(")", `, ${opacity})`);
 }
 function getOpacity(rgbStr){
     const numVariables = rgbStr.split(",").length;
@@ -184,4 +225,12 @@ function getOpacity(rgbStr){
         opacityString = strArray[3].slice(0, -1);
         return parseFloat(opacityString);
     }
+}
+
+function setAllModesOff(){
+    isMouseDown = false;
+    shadingMode = false;
+    rainbowMode = false;
+    eraserMode = false;
+    lightenMode = false;
 }
