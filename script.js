@@ -15,7 +15,6 @@ let eraserMode = false;
 let lightenMode = false;
 let bordersVisible = true; 
 let currentColorHex = colorPicker.value;
-console.log(currentColorHex);
 
 createGrid(INIT_GRID_SIZE);
 addBoxClickListeners();
@@ -71,23 +70,23 @@ function handleBoxHover(event){
     if(isMouseDown)
     {
         if (shadingMode){
-            // box.style.backgroundColor = "black";   
-            console.log(box.style.backgroundColor);
-            console.log(getComputedStyle(box).backgroundColor);
-            console.log(typeof(getComputedStyle(box).backgroundColor))
-            // let opacity = box.style.opacity;
-            // console.log(opacity);
-            // opacity = parseFloat(opacity);
-            // opacity += 0.1;
-            // console.log(opacity);
-            // box.style.opacity = opacity.toString(); 
+            let colorString = getComputedStyle(box).backgroundColor;
+            let opacity = getOpacity(colorString);    
+            if (opacity == 1 && colorString == "rgb(255, 255, 255)"){
+                console.log(colorString)
+                box.style.backgroundColor = currentColorHex;
+                addOpacity(box);
+            }
+            else{
+                incrementOpacity(box);
+            }        
         }
         else if (rainbowMode){
-            box.style.backgroundColor = getRandomColorRGB();
+            box.style.backgroundColor = getRandomColorRGBA();
         }
         else
         {
-            event.target.style.backgroundColor = "black";   
+            box.style.backgroundColor = currentColorHex;   
         }
     }
     
@@ -102,6 +101,17 @@ function handleMouseDown(event){
     isMouseDown = true;
 }
 
+function handleBoxClick(event){
+    if (shadingMode){
+        
+    }
+    else if (rainbowMode){
+        event.target.style.backgroundColor = getRandomColorRGBA();
+    }
+    else {
+        event.target.style.backgroundColor = currentColorHex;
+    }
+}
 function addBoxClickListeners(){
     const rows = document.querySelectorAll(".rowDiv");
     rows.forEach((row) => {
@@ -110,6 +120,7 @@ function addBoxClickListeners(){
             box.addEventListener("mouseover", handleBoxHover);
             box.addEventListener("mouseup", handleMouseUp);
             box.addEventListener("mousedown", handleMouseDown);
+            box.addEventListener("click", handleBoxClick);
         })
     })
 }
@@ -135,11 +146,11 @@ function toggleBorders(){
     }
 }
 
-function getRandomColorRGB() {
+function getRandomColorRGBA() {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
+    return `rgb(${r} ${g} ${b} / 100%)`;
 }
 
 function updateFirst(event) {
@@ -148,4 +159,29 @@ function updateFirst(event) {
 
 function watchColorPicker(event) {
     currentColorHex = event.target.value;
+}
+
+function incrementOpacity(box){
+    let colorStr = getComputedStyle(box).backgroundColor; 
+    let opacity = getOpacity(colorStr);
+    if (opacity < 1.0){
+        let strArray = colorStr.split(",");
+        strArray[3] = ` ${opacity + 0.1})`;
+        box.style.backgroundColor = strArray.toString();
+    }
+}
+
+function addOpacity(box){
+    let colorStr = getComputedStyle(box).backgroundColor; 
+    box.style.backgroundColor = colorStr.replace(")", `, 0.1)`);
+}
+function getOpacity(rgbStr){
+    const numVariables = rgbStr.split(",").length;
+    if (numVariables < 4)
+        return 1;
+    else {
+        let strArray = rgbStr.split(",");
+        opacityString = strArray[3].slice(0, -1);
+        return parseFloat(opacityString);
+    }
 }
