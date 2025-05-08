@@ -47,6 +47,7 @@ body{
     border-width: 1px;
     border-color: rgb(150, 150, 150);
     flex-grow: 1;
+    /* opacity: 1; */
 }
 
 .rowDiv {

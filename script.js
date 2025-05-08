@@ -20,6 +20,7 @@ clearButton.addEventListener("click", () => {
 })
 gridSlider.addEventListener("input", handleSlider);
 toggleBorderButton.addEventListener("click", toggleBorders);
+shadingButton.addEventListener("click", () => {shadingMode = true;})
 
 function createGrid(gridSize){
     const divContainer = document.querySelector(".grid-container");
@@ -40,9 +41,7 @@ function clearGrid(){
     const rows = document.querySelectorAll(".rowDiv");
     rows.forEach((row) => {
         const rowBoxes = row.querySelectorAll(".columnDiv");
-        rowBoxes.forEach((box) => {
-            box.remove();
-        })
+        rowBoxes.forEach((box) => {box.remove();})
         row.remove();
     })
 }
@@ -57,13 +56,24 @@ function handleSlider(event){
 }
 
 function handleBoxHover(event){
-    let red = true;
     if(isMouseDown)
     {
         if (shadingMode){
-
+            const box = event.target;
+            box.style.backgroundColor = "black";   
+            let opacity = box.style.opacity;
+            if (opacity === ""){
+                opacity = "0.1"; 
+            }
+            opacity = parseFloat(opacity);
+            opacity += 0.1;
+            console.log(opacity);
+            box.style.opacity = opacity.toString(); 
         }
-        event.target.style.backgroundColor = "black";
+        else
+        {
+            event.target.style.backgroundColor = "black";   
+        }
     }
     
 }
@@ -93,9 +103,7 @@ function resetBoard(){
     const rows = document.querySelectorAll(".rowDiv");
     rows.forEach((row) => {
         const boxes = row.querySelectorAll(".columnDiv");
-        boxes.forEach((box) => {
-            box.style.backgroundColor = "white";
-        })
+        boxes.forEach((box) => {box.style.backgroundColor = "white";})
     })
 }
 
@@ -103,15 +111,11 @@ function toggleBorders(){
     const columnBoxes = document.querySelectorAll(".columnDiv");
 
     if (bordersVisible){
-        columnBoxes.forEach((box) => {
-            box.style.borderWidth = "0";
-        })
+        columnBoxes.forEach((box) => { box.style.borderWidth = "0";})
         bordersVisible = false;
     }
     else {
-        columnBoxes.forEach((box) => {
-            box.style.borderWidth = "1px";
-        })
+        columnBoxes.forEach((box) => {box.style.borderWidth = "1px";})
         bordersVisible = true;
     }
 }
