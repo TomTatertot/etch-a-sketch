@@ -1,6 +1,7 @@
 const INIT_GRID_SIZE = 32;
 const BUTTON_SELECTED_COLOR = "rgb(172, 172, 172)";
 const BACKGROUND_COLOR = "rgb(255, 255, 255)";
+
 const colorPicker = document.querySelector("#color-picker");
 const clearButton = document.querySelector("#clear-board");
 const gridSlider = document.querySelector("#grid-slider");
@@ -13,7 +14,6 @@ const lightenButton = document.querySelector("#lighten");
 const buttons = document.querySelectorAll(".btn");
 const modeButtons = document.querySelectorAll(".btn.mode");
 
-
 let isMouseDown = false;
 let shadingMode = false;
 let rainbowMode = false;
@@ -23,6 +23,8 @@ let bordersVisible = true;
 let currentColorHex = colorPicker.value;
 
 toggleBorderButton.style.backgroundColor = BUTTON_SELECTED_COLOR;
+brushButton.style.backgroundColor = BUTTON_SELECTED_COLOR;
+
 createGrid(INIT_GRID_SIZE);
 addBoxClickListeners();
 
@@ -115,7 +117,6 @@ function handleBoxHover(event){
     {
         box.style.backgroundColor = currentColorHex;   
     }
-
 }
 
 function handleBoxMouseUp(event){
