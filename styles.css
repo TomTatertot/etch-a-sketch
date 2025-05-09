@@ -82,9 +82,6 @@ body{
   }
 
 #grid-slider {
-    display: flex;
-    align-self: center;
-    width: 200px;
     cursor: pointer;
 }
 
