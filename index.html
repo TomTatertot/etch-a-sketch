@@ -12,20 +12,24 @@
     </header>
     <div class = "main-container">
         <div class = "side-bar">
-            <label for="color-picker">Choose a color:</label>
             <input type="color" id="color-picker" value="#000000">
-            <button class ="btn" id = "toggle-borders">Toggle Borders</button>
-            <button class ="btn" id = "brush-mode">Brush Mode</button>
-            <button class ="btn" id = "shading-mode">Shading Mode</button>
-            <button class ="btn" id = "rainbow-mode">Rainbow Mode</button>
-            <button class ="btn" id = "eraser">Eraser</button>
-            <button class ="btn" id = "lighten">Lighten</button>
-            <div class = "grid-inputs">
+            <div class ="btn-container">
+                <button class ="btn mode" id = "brush-mode">Brush</button>
+                <button class ="btn mode" id = "eraser">Eraser</button>
+            </div>
+            <div class ="btn-container">
+                <button class ="btn mode" id = "shading-mode">Shade</button>
+                <button class ="btn mode" id = "lighten">Lighten</button>
+            </div>
+            <div class ="btn-container">
+                <button class ="btn mode" id = "rainbow-mode">Random Color</button>
+                <button class ="btn" id = "toggle-borders">Toggle Borders</button>
+            </div>
+            <div class = "btn-container">
                 <div class ="grid-size-text">Grid Size: 32 x 32</div>
                 <input type="range" id="grid-slider" min="10" max="100" value="16">
-                <!-- <button class = "btn" id = "submit">Submit</button> -->
+                <button class ="btn" id = "clear-board">Clear board</button>   
             </div>
-            <button class ="btn" id = "clear-board">Clear board</button>
         </div>  
         <div class = "grid-container"></div>  
     </div>

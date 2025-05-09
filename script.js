@@ -1,4 +1,6 @@
 const INIT_GRID_SIZE = 32;
+const BUTTON_SELECTED_COLOR = "rgb(172, 172, 172)";
+const BACKGROUND_COLOR = "rgb(255, 255, 255)";
 const colorPicker = document.querySelector("#color-picker");
 const clearButton = document.querySelector("#clear-board");
 const gridSlider = document.querySelector("#grid-slider");
@@ -8,6 +10,9 @@ const shadingButton = document.querySelector("#shading-mode");
 const rainbowButton = document.querySelector("#rainbow-mode");
 const eraserButton = document.querySelector("#eraser");
 const lightenButton = document.querySelector("#lighten");
+const buttons = document.querySelectorAll(".btn");
+const modeButtons = document.querySelectorAll(".btn.mode");
+
 
 let isMouseDown = false;
 let shadingMode = false;
@@ -17,29 +22,33 @@ let lightenMode = false;
 let bordersVisible = true; 
 let currentColorHex = colorPicker.value;
 
+toggleBorderButton.style.backgroundColor = BUTTON_SELECTED_COLOR;
 createGrid(INIT_GRID_SIZE);
 addBoxClickListeners();
 
 colorPicker.addEventListener("input", updateFirst);
 colorPicker.addEventListener("change", watchColorPicker);
-toggleBorderButton.addEventListener("click", toggleBorders);
-brushButton.addEventListener("click", () => {
-    setAllModesOff();
+
+buttons.forEach((button) => {
+    addButtonEffects(button);
+});
+
+modeButtons.forEach((button) => {
+    addModeButtonEffects(button);
 })
+
+toggleBorderButton.addEventListener("click", handleToggleBorders);
+
 shadingButton.addEventListener("click", () => {
-    setAllModesOff();
     shadingMode = true;
 })
 rainbowButton.addEventListener("click", () => {
-    setAllModesOff();
     rainbowMode = true;
 })
 eraserButton.addEventListener("click", () => {
-    setAllModesOff();
     eraserMode = true;
 })
 lightenButton.addEventListener("click", () => {
-    setAllModesOff();
     lightenMode = true;
 })
 gridSlider.addEventListener("input", handleSlider);
@@ -82,59 +91,45 @@ function handleSlider(event){
 
 function handleBoxHover(event){
     const box = event.target;
-    if(isMouseDown)
-    {
-        console.log(getComputedStyle(box).backgroundColor);
-        if (shadingMode){
-            let colorString = getComputedStyle(box).backgroundColor;
-            let opacity = getOpacity(colorString);    
-
-            if (opacity == 1 && colorString == "rgb(255, 255, 255)"){
-                box.style.backgroundColor = currentColorHex;
-                addOpacity(box, 0.1);
-            }
-            else if (opacity == 0){
-                box.style.backgroundColor = currentColorHex;
-                addOpacity(box, 0.1);
-            }
-            else{
-                incrementOpacity(box);
-            }        
+    if (!isMouseDown)
+        return;
+    if (shadingMode){
+        if (isClear(box)){
+            box.style.backgroundColor = currentColorHex;
+            addOpacity(box, 0.1);
         }
-        else if (lightenMode){
-            let colorString = getComputedStyle(box).backgroundColor;
-            let opacity = getOpacity(colorString);
-
-            console.log(opacity);
-            if (opacity > 0){
-                decrementOpacity(box);
-            } 
-        }
-        else if (rainbowMode){
-            box.style.backgroundColor = getRandomColorRGBA();
-        }
-        else if (eraserMode){
-            box.style.backgroundColor = "white";
-        }
-        else
-        {
-            box.style.backgroundColor = currentColorHex;   
-        }
+        else{
+            incrementOpacity(box);
+        }   
     }
+    else if (lightenMode){
+        decrementOpacity(box);
+    }
+    else if (rainbowMode){
+        box.style.backgroundColor = getRandomColorRGBA();
+    }
+    else if (eraserMode){
+        box.style.backgroundColor = BACKGROUND_COLOR;
+    }
+    else
+    {
+        box.style.backgroundColor = currentColorHex;   
+    }
+
 }
 
-function handleMouseUp(event){
+function handleBoxMouseUp(event){
     isMouseDown = false;
 }
 
-function handleMouseDown(event){
+function handleBoxMouseDown(event){
     event.preventDefault(); //prevent mouse drag on screen
     isMouseDown = true;
 }
 
 function handleBoxClick(event){
     if (shadingMode){
-        
+    
     }
     else if (rainbowMode){
         event.target.style.backgroundColor = getRandomColorRGBA();
@@ -143,14 +138,29 @@ function handleBoxClick(event){
         event.target.style.backgroundColor = currentColorHex;
     }
 }
+
+function addModeButtonEffects(button){
+    button.addEventListener("click", () => {
+        setAllModesOff();
+        button.style.backgroundColor = BUTTON_SELECTED_COLOR;
+    });
+}
+function addButtonEffects(button){
+    button.addEventListener("mouseenter", () => {
+        button.classList.add("float-effect");
+    });
+    button.addEventListener("mouseleave", () => {
+        button.classList.remove("float-effect");
+    });
+}
 function addBoxClickListeners(){
     const rows = document.querySelectorAll(".rowDiv");
     rows.forEach((row) => {
         const boxes = row.querySelectorAll(".columnDiv");
         boxes.forEach((box) => {
             box.addEventListener("mouseover", handleBoxHover);
-            box.addEventListener("mouseup", handleMouseUp);
-            box.addEventListener("mousedown", handleMouseDown);
+            box.addEventListener("mouseup", handleBoxMouseUp);
+            box.addEventListener("mousedown", handleBoxMouseDown);
             box.addEventListener("click", handleBoxClick);
         })
     })
@@ -160,21 +170,21 @@ function resetBoard(){
     const rows = document.querySelectorAll(".rowDiv");
     rows.forEach((row) => {
         const boxes = row.querySelectorAll(".columnDiv");
-        boxes.forEach((box) => {box.style.backgroundColor = "white";})
+        boxes.forEach((box) => {box.style.backgroundColor = BACKGROUND_COLOR;})
     })
 }
 
-function toggleBorders(){
+function handleToggleBorders(){
     const columnBoxes = document.querySelectorAll(".columnDiv");
-
     if (bordersVisible){
+        toggleBorderButton.style.backgroundColor = BACKGROUND_COLOR;
         columnBoxes.forEach((box) => { box.style.borderWidth = "0";})
-        bordersVisible = false;
     }
     else {
         columnBoxes.forEach((box) => {box.style.borderWidth = "1px";})
-        bordersVisible = true;
+        toggleBorderButton.style.backgroundColor = BUTTON_SELECTED_COLOR;
     }
+    bordersVisible = !bordersVisible;
 }
 
 function getRandomColorRGBA() {
@@ -230,7 +240,27 @@ function getOpacity(rgbStr){
     }
 }
 
+function isClear(box){
+    let colorString = getComputedStyle(box).backgroundColor;
+    let opacity = getOpacity(colorString);    
+    
+    //white box
+    if (opacity == 1 && colorString == BACKGROUND_COLOR){
+        return true;
+    }
+    else if (opacity == 0){ //fully lightened box
+        return true;
+    }
+    else{
+        return false;
+    }        
+}
+
 function setAllModesOff(){
+    console.log(modeButtons);
+    modeButtons.forEach((button) => {
+        button.style.backgroundColor = BACKGROUND_COLOR;
+    });
     isMouseDown = false;
     shadingMode = false;
     rainbowMode = false;
